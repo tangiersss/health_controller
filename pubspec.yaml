@@ -34,7 +34,6 @@ flutter:
     - assets/images/sleep.png
     - assets/images/temperature.png
     - assets/images/pressure.png
-    - assets/healthdata.db
 
   fonts:
   - family: WorkSans

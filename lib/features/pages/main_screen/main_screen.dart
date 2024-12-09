@@ -13,6 +13,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  
 
   final List<Widget> _pages = [
     const HomePage(),
@@ -26,35 +27,44 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  Future<void> _addDate(String date) async {
+    DatabaseHelper dbHelper = DatabaseHelper();
+    await dbHelper.addSomeDate(date);
+  }
+
+    Future<void> _addSome() async {
+    DatabaseHelper dbHelper = DatabaseHelper();
+    await dbHelper.addStepsData("12461", 1);
+    await dbHelper.addStepsData("15700", 2);
+    await dbHelper.addStepsData("13637", 3);
+    await dbHelper.addStepsData("22670", 4);
+    await dbHelper.addStepsData("19549", 5);
+    await dbHelper.addSleepingHours(6, 1);
+    await dbHelper.addSleepingHours(7, 1);
+    await dbHelper.addSleepingHours(8, 1);
+    await dbHelper.addSleepingHours(7, 1);
+    await dbHelper.addSleepingHours(8, 1);
+  }
+
+  Future<void> _deleteDb() async {
+    DatabaseHelper dbHelper = DatabaseHelper();
+    await dbHelper.deleteAllTables();
+  }
+
   @override
   void initState() {
     super.initState();
-    // _addInitialData();
-  }
-
-  Future<void> _addInitialData() async {
-    final DateTime now = DateTime.now();
-    final String todayDate = DateFormat('yyyy-MM-dd').format(now);
-
-    final DatabaseHelper dbHelper = DatabaseHelper();
-    final dateId = await dbHelper.insertDateIfNotExists(todayDate);
-
-    final String heartRate = "78 BPM";
-    final String pressure = "120/75 mmHg";
-    final int sleepingHours = 8;
-    final String steps = "123456";
-    final String weight = "70 kg";
-
-    // Добавляем значения в соответствующие таблицы
-    await dbHelper.insertHeartRate(heartRate, dateId);
-    await dbHelper.insertPressure(pressure, dateId);
-    await dbHelper.insertSleepingHours(sleepingHours, dateId);
-    await dbHelper.insertSteps(steps, dateId);
-    await dbHelper.insertWeight(weight, dateId);
+    // _addDate('05.12');
+    // _addDate('06.12');
+    // _addDate('07.12');
+    // _addDate('08.12');
+    // _addDate('09.12');
+    // _addSome();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.red.shade100,
       appBar: AppBar(
@@ -110,9 +120,7 @@ class HomePage extends StatelessWidget {
     final String monthYear = DateFormat('MMMM yyyy').format(now);
 
     final List<String> recommendations = [
-      "Eat healthy food",
-      "Exercise regularly",
-      "Set a daily goal",
+      "Set a daily goal!",
       "Drink more water",
       "Get enough sleep",
     ];
@@ -190,12 +198,12 @@ class HomePage extends StatelessWidget {
               children: [
                 _buildIndicator(
                     "assets/images/temperature.png", "Temperature", "36.6 °C"),
-                _buildIndicator("assets/images/heart.png", "Heart", "78 BPM"),
+                _buildIndicator("assets/images/heart.png", "Heart", "80 BPM"),
                 _buildIndicator(
-                    "assets/images/pressure.png", "Pressure", "120/75 mmHg"),
-                _buildIndicator("assets/images/weight.png", "Weight", "70 kg"),
-                _buildIndicator("assets/images/sleep.png", "Time sleep", "8 h"),
-                _buildIndicator("assets/images/steps.png", "Steps", "123456"),
+                    "assets/images/pressure.png", "Pressure", "125/70 mmHg"),
+                _buildIndicator("assets/images/weight.png", "Weight", "85 kg"),
+                _buildIndicator("assets/images/sleep.png", "Time sleep", "9 h"),
+                _buildIndicator("assets/images/steps.png", "Steps", "14753"),
               ],
             ),
           ),

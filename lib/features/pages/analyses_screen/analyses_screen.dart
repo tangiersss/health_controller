@@ -15,11 +15,13 @@ class _AnalysesScreenState extends State<AnalysesScreen> {
   List<BarChartGroupData> _chartDataHeartRate = [];
   List<BarChartGroupData> _chartDataSleep = [];
   List<BarChartGroupData> _chartDataWeight = [];
+  List<String> _dates = [];
 
   @override
   void initState() {
     super.initState();
     _loadChartData();
+    _loadDates();
   }
 
   Future<void> _loadChartData() async {
@@ -36,6 +38,13 @@ class _AnalysesScreenState extends State<AnalysesScreen> {
     });
   }
 
+  Future<void> _loadDates() async {
+    final dbHelper = DatabaseHelper();
+    final datesData = await dbHelper.getDates();
+    setState(() {
+      _dates = datesData.map((date) => date['date'] as String).toList();
+    });
+  }
   List<BarChartGroupData> _mapChartDataForDouble(
       List<Map<String, dynamic>> data, Color color) {
     final regex = RegExp(r'\d+(\.\d+)?');
@@ -110,10 +119,10 @@ class _AnalysesScreenState extends State<AnalysesScreen> {
   }
 
   String _getFormattedDate(int value) {
-    final dates = [
-      '23.11', '24.11', '25.11', '26.11', '27.11', '28.11', '29.11'
-    ];
-    return dates[value % dates.length];
+    if (_dates.isNotEmpty && value < _dates.length) {
+      return _dates[value];
+    }
+    return 'N/A';
   }
 
   @override
@@ -134,8 +143,7 @@ class _AnalysesScreenState extends State<AnalysesScreen> {
         maxY = _chartDataSteps.isNotEmpty
             ? _chartDataSteps
                     .map((group) => group.barRods[0].toY)
-                    .reduce((a, b) => a > b ? a : b) *
-                2
+                    .reduce((a, b) => a > b ? a : b)
             : 10000;
         chartData = _chartDataSteps;
         break;
@@ -174,60 +182,59 @@ class _AnalysesScreenState extends State<AnalysesScreen> {
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: BarChart(
                     BarChartData(
-  gridData: FlGridData(show: true),
-  borderData: FlBorderData(
-    border: const Border(
-      top: BorderSide.none,
-      right: BorderSide.none,
-      left: BorderSide(width: 1),
-      bottom: BorderSide(width: 1),
-    ),
-  ),
-  titlesData: FlTitlesData(
-    leftTitles: AxisTitles(
-      sideTitles: SideTitles(
-        showTitles: true, // Показывать только слева
-        reservedSize: 50,
-        getTitlesWidget: (value, meta) {
-          return Text(
-            _getFormattedTitle(value),
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.black,
-            ),
-          );
-        },
-      ),
-    ),
-    bottomTitles: AxisTitles(
-      sideTitles: SideTitles(
-        showTitles: true, // Показывать только снизу
-        getTitlesWidget: (value, meta) {
-          return Text(
-            _getFormattedDate(value.toInt()),
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.black,
-            ),
-          );
-        },
-      ),
-    ),
-    topTitles: AxisTitles(
-      sideTitles: SideTitles(
-        showTitles: false, // Скрыть сверху
-      ),
-    ),
-    rightTitles: AxisTitles(
-      sideTitles: SideTitles(
-        showTitles: false, // Скрыть справа
-      ),
-    ),
-  ),
-  barGroups: chartData,
-  maxY: maxY,
-)
-
+                      gridData: FlGridData(show: true),
+                      borderData: FlBorderData(
+                        border: const Border(
+                          top: BorderSide.none,
+                          right: BorderSide.none,
+                          left: BorderSide(width: 1),
+                          bottom: BorderSide(width: 1),
+                        ),
+                      ),
+                      titlesData: FlTitlesData(
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 50,
+                            getTitlesWidget: (value, meta) {
+                              return Text(
+                                _getFormattedTitle(value),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            getTitlesWidget: (value, meta) {
+                              return Text(
+                                _getFormattedDate(value.toInt()),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: false,
+                          ),
+                        ),
+                        rightTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: false,
+                          ),
+                        ),
+                      ),
+                      barGroups: chartData,
+                      maxY: maxY,
+                    ),
                   ),
                 ),
               ),

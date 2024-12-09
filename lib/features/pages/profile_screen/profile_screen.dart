@@ -85,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         controller: controller,
         keyboardType: TextInputType.number,
         inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly, // Только цифры
+          FilteringTextInputFormatter.digitsOnly,
         ],
         decoration: InputDecoration(
           labelText: label,
@@ -108,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         keyboardType: TextInputType.numberWithOptions(decimal: true),
         inputFormatters: [
           FilteringTextInputFormatter.allow(
-              RegExp(r'^\d*\.?\d*')), // Только цифры и точка
+              RegExp(r'^\d*\.?\d*')),
         ],
         decoration: InputDecoration(
           labelText: "Weight",
